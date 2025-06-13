@@ -1,17 +1,15 @@
-
-
 ## Exercise 00: Easy find
 
-**目的**: テンプレート関数を使ってSTLコンテナ内で値を検索する
+**Objective**: Implement a template function to search for values in STL containers
 
-### 主要な概念
-この演習では以下を学びます：
-- 関数テンプレートの基本的な使用法
-- STLアルゴリズム `std::find` の活用
-- イテレーターの概念と使用法
-- 例外処理の実装
+### Key Concepts
+This exercise covers:
+- Basic usage of function templates
+- Utilizing STL algorithm `std::find`
+- Iterator concepts and usage
+- Exception handling implementation
 
-### 実装のポイント
+### Implementation Highlights
 
 ```12:34:ex00/includes/easyfind.hpp
 template <typename T>
@@ -24,16 +22,16 @@ typename T::iterator easyfind(T& container, int value) {
 }
 ```
 
-#### 技術的な解説：
-1. **テンプレート関数**: `template <typename T>` により、任意のコンテナ型に対応
-2. **戻り値型**: `typename T::iterator` でコンテナのイテレーター型を取得
-3. **std::find**: STLアルゴリズムを使って線形探索を実行
-4. **例外処理**: 値が見つからない場合は独自例外をスロー
+#### Technical Explanation:
+1. **Template Function**: `template <typename T>` allows compatibility with any container type
+2. **Return Type**: `typename T::iterator` retrieves the container's iterator type
+3. **std::find**: Uses STL algorithm for linear search
+4. **Exception Handling**: Throws custom exception when value is not found
 
-### テスト例の解説
+### Test Case Explanation
 
 ```19:38:ex00/srcs/main.cpp
-    // ケース1: 値が見つかる場合
+    // Case 1: When value is found
     try {
         std::vector<int>::iterator it = easyfind(vec, 30);
         std::cout << "Found value: " << *it << std::endl;
@@ -41,7 +39,7 @@ typename T::iterator easyfind(T& container, int value) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
 
-    // ケース2: 値が見つからない場合
+    // Case 2: When value is not found
     try {
         easyfind(vec, 99);
     } catch (const std::exception& e) {
@@ -49,22 +47,22 @@ typename T::iterator easyfind(T& container, int value) {
     }
 ```
 
-この実装では `std::vector` と `std::list` でテストしており、どのSTLコンテナでも動作することを確認しています。
+This implementation tests with both `std::vector` and `std::list`, confirming functionality with any STL container.
 
 ---
 
 ## Exercise 01: Span
 
-**目的**: 数値のコンテナクラスを作成し、最短・最長スパンを計算する
+**Objective**: Create a numeric container class that calculates shortest and longest spans
 
-### 主要な概念
-この演習では以下を学びます：
-- `std::multiset` コンテナの活用
-- 効率的なスパン計算アルゴリズム
-- 例外安全性の設計
-- 大量データの処理
+### Key Concepts
+This exercise covers:
+- Utilizing `std::multiset` container
+- Efficient span calculation algorithms
+- Exception-safe design
+- Large data processing
 
-### クラス設計
+### Class Design
 
 ```33:49:ex01/includes/Span.hpp
 class Span {
@@ -83,14 +81,14 @@ public:
 };
 ```
 
-#### 設計の理由：
-- **std::multiset**: 自動ソートと重複値の許可により、効率的なスパン計算が可能
-- **容量制限**: `_maxSize` で保存可能な要素数を制限
-- **例外安全**: 適切な例外をスローして異常状態を通知
+#### Design Rationale:
+- **std::multiset**: Enables efficient span calculation through automatic sorting and duplicate value support
+- **Capacity Limit**: `_maxSize` restricts the number of storable elements
+- **Exception Safety**: Throws appropriate exceptions to notify abnormal states
 
-### 重要な実装詳細
+### Important Implementation Details
 
-#### 最短スパンの計算
+#### Shortest Span Calculation
 ```32:46:ex01/srcs/Span.cpp
 int Span::shortestSpan() {
 	if (this->_numbers.size() < 2)
@@ -114,12 +112,12 @@ int Span::shortestSpan() {
 }
 ```
 
-**アルゴリズムの解説**:
-- ソート済みの `multiset` で隣接要素の差分を計算
-- 時間計算量: O(n)
-- 空間計算量: O(1)
+**Algorithm Explanation**:
+- Calculates differences between adjacent elements in sorted `multiset`
+- Time Complexity: O(n)
+- Space Complexity: O(1)
 
-#### 最長スパンの計算
+#### Longest Span Calculation
 ```56:60:ex01/srcs/Span.cpp
 int Span::longestSpan() {
 	if (this->_numbers.size() < 2)
@@ -128,14 +126,14 @@ int Span::longestSpan() {
 }
 ```
 
-**アルゴリズムの解説**:
-- ソート済みなので、最大値 - 最小値で計算
-- 時間計算量: O(1)
-- 空間計算量: O(1)
+**Algorithm Explanation**:
+- Calculated as maximum value - minimum value due to sorting
+- Time Complexity: O(1)
+- Space Complexity: O(1)
 
-### テストケースの解説
+### Test Case Explanation
 
-#### 正常系テスト
+#### Normal Case Test
 ```18:29:ex01/srcs/main.cpp
         Span sp(5);
         sp.addNumber(6);
@@ -149,7 +147,7 @@ int Span::longestSpan() {
         std::cout << "Longest span : " << sp.longestSpan() << std::endl;
 ```
 
-#### 大容量テスト
+#### Large Capacity Test
 ```47:56:ex01/srcs/main.cpp
         const int largeSize = 100000;
         Span sp_large(largeSize);
@@ -163,9 +161,9 @@ int Span::longestSpan() {
         std::cout << "Longest span : " << sp_large.longestSpan() << std::endl;
 ```
 
-このテストでは10万個の要素を処理し、実装の効率性を確認します。
+This test processes 100,000 elements to verify implementation efficiency.
 
-#### 重複値テスト
+#### Duplicate Value Test
 ```58:65:ex01/srcs/main.cpp
         Span sp_dup(3);
         sp_dup.addNumber(100);
@@ -175,22 +173,22 @@ int Span::longestSpan() {
         std::cout << "Shortest span with duplicates: " << sp_dup.shortestSpan() << std::endl;
 ```
 
-重複値がある場合、最短スパンが0になることを確認します。
+Verifies that shortest span becomes 0 when duplicate values exist.
 
 ---
 
-## 全体の学習効果
+## Overall Learning Outcomes
 
-### STLの理解
-- **コンテナ**: `vector`, `list`, `multiset`の特性と使い分け
-- **イテレーター**: 異なるコンテナ間での統一的なアクセス方法
-- **アルゴリズム**: `std::find`などの汎用アルゴリズムの活用
+### STL Understanding
+- **Containers**: Characteristics and usage of `vector`, `list`, and `multiset`
+- **Iterators**: Unified access method across different containers
+- **Algorithms**: Utilization of generic algorithms like `std::find`
 
-### C++の高度な機能
-- **テンプレート**: 型パラメータを使った汎用プログラミング
-- **例外処理**: 安全なエラーハンドリング
-- **RAII**: リソースの自動管理
+### Advanced C++ Features
+- **Templates**: Generic programming using type parameters
+- **Exception Handling**: Safe error handling
+- **RAII**: Automatic resource management
 
-### パフォーマンス意識
-- 適切なデータ構造の選択（multisetによる自動ソート）
-- 効率的なアルゴリズム設計（O(1)とO(n)の最適化）
+### Performance Awareness
+- Appropriate data structure selection (automatic sorting with multiset)
+- Efficient algorithm design (O(1) and O(n) optimization)
